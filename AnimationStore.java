@@ -3,6 +3,9 @@ package com.Softy.Samples;
 //Apache License 2.0 applies to this code only.
 //Read open source license at https://www.softy.xyz/open_license.php
 
+import com.Softy.Templates.Creator;
+import com.Softy.Templates.Reader;
+
 public class AnimationStore
 {
 	//AnimatorUtil attaches an animation to an object
@@ -23,14 +26,17 @@ public class AnimationStore
 	private int resAnimation; // <-- What the animation is (R.anim.**)
 	private String attachedTo; // <-- Name of the package the animation is attached to
 	private View attachedView; // <-- Custom view used. PREFERED.
-	public AnimatorUtil attachAnimationTo(int resAnimation, String attachedTo)
+	private Context mAttachedContext;
+	public AnimatorUtil attachAnimationTo(Context mContext, int resAnimation, String attachedTo)
 	{
+		this.mAttachedContext = mContext;
 		this.resAnimation = resAnimation;
 		this.attachedTo = attachedTo;
 	}
 	
-	public AnimatorUtil attachAnimationTo(int resAnimation, String attachedTo, View customView)
+	public AnimatorUtil attachAnimationTo(Context mContext, int resAnimation, String attachedTo, View customView)
 	{
+		this.mAttachedContext = mContext;
 		this.resAnimation = resAnimation;
 		this.attachedTo = attachedTo;
 		this.attachedView = customView;
@@ -65,11 +71,28 @@ public class AnimationStore
 	public void animateAttachedAnimationOnView(View view)
 	{
 		//Use Animation from Android jar to animate the attached animation
+		if( resAnimation == 0 )
+			throw new NullPointerException("resAnimation can not be 0");
+		if( mContext == null )
+			throw new NullPointerException("mContext is not set. How'd you access me without setting that??");
+		Animation mAnimation = AnimationUtils.loadAnimation(mContext, resAnimation);
+		view.startAnimation(mAnimation);
+		view.animate();
 	}
 	
 	public void animateAttachedAnimationOnView()
 	{
 		//Use Animation from Android jar to animate the attached animation
+		//They set attachedView
+		//If not, we will throw an npe
+		if( attachedView == null )
+			throw new NullPointerException("attachedView is not set.");
+		//I mean, they did set resAnimation, right?
+		if( resAnimation == 0 )
+			throw new NullPointerException("resAnimation is not set.");
+		Animation mAnimation = AnimationUtils.loadAnimation(mContext, resAnimation);
+		attachedView.setAnimation(mAnimation);
+		attachedView.animate();
 	}
 
 	public void writeAnimationToFile(String path)
