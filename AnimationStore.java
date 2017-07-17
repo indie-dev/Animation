@@ -77,7 +77,6 @@ public class AnimationStore
 			throw new NullPointerException("mContext is not set. How'd you access me without setting that??");
 		Animation mAnimation = AnimationUtils.loadAnimation(mContext, resAnimation);
 		view.startAnimation(mAnimation);
-		view.animate();
 	}
 	
 	public void animateAttachedAnimationOnView()
@@ -92,7 +91,6 @@ public class AnimationStore
 			throw new NullPointerException("resAnimation is not set.");
 		Animation mAnimation = AnimationUtils.loadAnimation(mContext, resAnimation);
 		attachedView.setAnimation(mAnimation);
-		attachedView.animate();
 	}
 
 	public void writeAnimationToFile(String path)
